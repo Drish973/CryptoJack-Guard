@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CryptoJack Guard Dashboard</title>
+  <link rel="stylesheet" href="popup.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="app-container">
+    <!-- Header -->
+    <header class="app-header">
+      <div class="logo-area">
+        <svg class="header-logo-svg" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M24 4L38 10V22C38 31.5 32 40.2 24 44C16 40.2 10 31.5 10 22V10L24 4Z" fill="#0F172A" stroke="#06B6D4" stroke-width="3" stroke-linejoin="round"/>
+          <path d="M26.88 15.52L17.28 32.32H27.2L23.84 42.08L33.44 29.12H23.52L26.88 15.52Z" fill="#F59E0B"/>
+        </svg>
+        <div class="logo-text">
+          <h1>CryptoJack <span>Guard</span></h1>
+          <p class="status-indicator"><span class="pulse-dot"></span> Active Shield</p>
+        </div>
+      </div>
+      <div class="version-badge">v1.0.0</div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="app-main">
+      
+      <!-- Current Site Info Card -->
+      <section class="card site-card">
+        <div class="site-details">
+          <div class="site-icon">
+            <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>
+          </div>
+          <div class="site-meta">
+            <span class="label">Current Host</span>
+            <span id="site-url" class="value">Loading...</span>
+          </div>
+        </div>
+        
+        <!-- Toggle Switch -->
+        <div class="trust-toggle-wrapper">
+          <span class="toggle-label">Trust Site</span>
+          <label class="switch">
+            <input type="checkbox" id="trust-checkbox">
+            <span class="slider round"></span>
+          </label>
+        </div>
+      </section>
+
+      <!-- Threat Level Gauge -->
+      <section class="card gauge-card">
+        <div class="gauge-container">
+          <!-- Circular Progress SVG -->
+          <svg class="radial-gauge" viewBox="0 0 120 120">
+            <circle class="gauge-bg" cx="60" cy="60" r="50"></circle>
+            <circle id="gauge-fill" class="gauge-fill" cx="60" cy="60" r="50"></circle>
+          </svg>
+          <div class="gauge-text">
+            <span id="score-number" class="score">0</span>
+            <span class="score-max">/100</span>
+            <span id="score-label" class="label text-safe">Safe</span>
+          </div>
+        </div>
+        <p id="score-desc" class="gauge-description">No suspicious activity detected on this page.</p>
+      </section>
+
+      <!-- Log / Signals Section -->
+      <section class="card logs-card">
+        <div class="logs-header">
+          <h2>Threat Signals</h2>
+          <span id="signals-count" class="badge">0</span>
+        </div>
+        <div id="signals-list" class="signals-list">
+          <!-- Dynamically populated or empty state -->
+          <div class="empty-state">
+            <svg viewBox="0 0 24 24" width="32" height="32" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+            <p>Clean Event Stream</p>
+          </div>
+        </div>
+      </section>
+      
+    </main>
+
+    <!-- Footer Controls -->
+    <footer class="app-footer">
+      <button id="btn-export" class="btn btn-secondary">
+        <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
+        Export Threat Log
+      </button>
+      <button id="btn-reset" class="btn btn-danger-text">
+        Clear Tab Data
+      </button>
+    </footer>
+  </div>
+
+  <!-- Loading JS dependencies -->
+  <script src="../shared/storage-api.js"></script>
+  <script src="popup.js"></script>
+</body>
+</html>

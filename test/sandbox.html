@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CryptoJack Guard - Test Sandbox</title>
+  <style>
+    :root {
+      --bg-dark: #0f172a;
+      --bg-card: #1e293b;
+      --accent: #38bdf8;
+      --accent-hover: #0ea5e9;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --border: #334155;
+      --success: #10b981;
+      --danger: #ef4444;
+      --warning: #f59e0b;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background-color: var(--bg-dark);
+      color: var(--text-main);
+      padding: 40px 20px;
+      line-height: 1.6;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    header {
+      margin-bottom: 30px;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 20px;
+    }
+
+    h1 {
+      font-size: 2.5rem;
+      color: var(--accent);
+      margin-bottom: 8px;
+    }
+
+    p.subtitle {
+      color: var(--text-muted);
+      font-size: 1.1rem;
+    }
+
+    .instructions {
+      background: rgba(56, 189, 248, 0.08);
+      border: 1px dashed var(--accent);
+      border-radius: 8px;
+      padding: 16px 20px;
+      margin-bottom: 30px;
+    }
+
+    .instructions h2 {
+      font-size: 1.2rem;
+      margin-bottom: 8px;
+      color: var(--accent);
+    }
+
+    .instructions ol {
+      padding-left: 20px;
+      color: var(--text-main);
+    }
+
+    .instructions li {
+      margin-bottom: 6px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      margin-bottom: 30px;
+    }
+
+    @media (max-width: 768px) {
+      .grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .card h3 {
+      font-size: 1.3rem;
+      margin-bottom: 10px;
+      color: var(--text-main);
+    }
+
+    .card p {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+      margin-bottom: 20px;
+      flex-grow: 1;
+    }
+
+    .btn {
+      background: var(--accent);
+      color: var(--bg-dark);
+      border: none;
+      padding: 10px 16px;
+      border-radius: 6px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s ease, transform 0.1s ease;
+      display: inline-block;
+      text-align: center;
+    }
+
+    .btn:hover {
+      background: var(--accent-hover);
+    }
+
+    .btn:active {
+      transform: translateY(1px);
+    }
+
+    .btn-danger {
+      background: var(--danger);
+      color: white;
+    }
+    .btn-danger:hover {
+      background: #dc2626;
+    }
+
+    .btn-warning {
+      background: var(--warning);
+      color: var(--bg-dark);
+    }
+    .btn-warning:hover {
+      background: #d97706;
+    }
+
+    .console-card {
+      background: #020617;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 20px;
+      font-family: monospace;
+    }
+
+    .console-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+      border-bottom: 1px solid #1e293b;
+      padding-bottom: 8px;
+    }
+
+    .console-header h3 {
+      color: var(--text-muted);
+      font-size: 0.9rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .console-clear {
+      color: var(--text-muted);
+      cursor: pointer;
+      background: none;
+      border: none;
+      font-family: inherit;
+      font-size: 0.85rem;
+    }
+
+    .console-clear:hover {
+      color: var(--text-main);
+    }
+
+    .console-log {
+      max-height: 250px;
+      overflow-y: auto;
+      font-size: 0.9rem;
+    }
+
+    .log-line {
+      margin-bottom: 6px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.02);
+      padding-bottom: 4px;
+    }
+
+    .log-time {
+      color: var(--text-muted);
+      margin-right: 8px;
+    }
+
+    .log-info { color: var(--accent); }
+    .log-warn { color: var(--warning); }
+    .log-success { color: var(--success); }
+    .log-error { color: var(--danger); }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <header>
+      <h1>CryptoJack Guard Sandbox</h1>
+      <p class="subtitle">Test environment to validate cryptojacking detection layers</p>
+    </header>
+
+    <section class="instructions">
+      <h2>How to run tests:</h2>
+      <ol>
+        <li>Open Chrome and navigate to <code>chrome://extensions</code></li>
+        <li>Enable <strong>Developer mode</strong> (top-right toggle switch).</li>
+        <li>Click <strong>Load unpacked</strong> and select the project directory: <code>C:\Users\drish\.gemini\antigravity\scratch\cryptojacking-detector</code></li>
+        <li><strong>CRITICAL (if opening this page as a file:/// URL):</strong> Click the <strong>Details</strong> button on the CryptoJack Guard card and turn on the <strong>Allow access to file URLs</strong> toggle. Otherwise, Chrome blocks extension injection into local files!</li>
+        <li>Return to this page, click any of the test buttons below, and observe the extension's badge score and popup dashboard logs.</li>
+      </ol>
+    </section>
+
+    <div class="grid">
+      <!-- Test 1: Signature Scanner -->
+      <div class="card">
+        <div>
+          <h3>1. Script Signature Scanner</h3>
+          <p>Appends a mock external script tag <code>coinhive.js</code> (matched in signature configurations). The extension should block/flag the signature instantly.</p>
+        </div>
+        <button class="btn" onclick="triggerSignatureTest()">Load Signature Script</button>
+      </div>
+
+      <!-- Test 2: Inline Script Scanner -->
+      <div class="card">
+        <div>
+          <h3>2. Inline Keyword Scanner</h3>
+          <p>Appends an inline script containing miner keywords: <code>cryptonight</code> and <code>stratum+tcp</code>. The extension's static parser should catch it.</p>
+        </div>
+        <button class="btn btn-warning" onclick="triggerInlineSignatureTest()">Load Inline Miner</button>
+      </div>
+
+      <!-- Test 3: CPU Spike Monitor -->
+      <div class="card">
+        <div>
+          <h3>3. CPU Thread Heuristics</h3>
+          <p>Launches a recurring main-thread loop for 1.2 seconds, 3 times consecutively. The CPU monitor timing loop should detect the event loop lag.</p>
+        </div>
+        <button class="btn btn-danger" onclick="triggerCpuTest()">Peg CPU Thread</button>
+      </div>
+
+      <!-- Test 4: WebAssembly Interceptor -->
+      <div class="card">
+        <div>
+          <h3>4. WASM Interceptor (MAIN World)</h3>
+          <p>Instantiates a mock WebAssembly binary using <code>WebAssembly.instantiate</code> requesting <code>env.memory</code> and <code>env.table</code>. Should trigger the Wasm threat signal.</p>
+        </div>
+        <button class="btn" onclick="triggerWasmTest()">Instantiate WASM</button>
+      </div>
+    </div>
+
+    <!-- Console output -->
+    <section class="console-card">
+      <div class="console-header">
+        <h3>Sandbox Console Logs</h3>
+        <button class="console-clear" onclick="clearConsole()">Clear Logs</button>
+      </div>
+      <div id="console-log" class="console-log">
+        <div class="log-line"><span class="log-time">[00:00:00]</span> <span class="log-info">Sandbox ready. Waiting for user action.</span></div>
+      </div>
+    </section>
+  </div>
+
+  <script>
+    const consoleLog = document.getElementById('console-log');
+
+    // Display page runtime errors directly in the sandbox console
+    window.addEventListener('error', (event) => {
+      if (consoleLog) {
+        log(`Page Error: ${event.message} (Line ${event.lineno})`, 'error');
+      }
+    });
+
+    function log(message, type = 'info') {
+      const time = new Date().toLocaleTimeString();
+      const div = document.createElement('div');
+      div.className = 'log-line';
+      div.innerHTML = `<span class="log-time">[${time}]</span> <span class="log-${type}">${message}</span>`;
+      consoleLog.appendChild(div);
+      consoleLog.scrollTop = consoleLog.scrollHeight;
+      console.log(`[Sandbox] ${message}`);
+    }
+
+    function clearConsole() {
+      consoleLog.innerHTML = '';
+      log('Logs cleared.', 'info');
+    }
+
+    // 1. Signature scanner test
+    function triggerSignatureTest() {
+      log('Creating dynamic script tag targeting "coinhive.js"...', 'info');
+      
+      // Remove previous element if it exists to allow retesting
+      const oldScript = document.getElementById('test-sig-script');
+      if (oldScript) oldScript.remove();
+
+      const script = document.createElement('script');
+      script.id = 'test-sig-script';
+      script.src = 'coinhive.js';
+      
+      document.body.appendChild(script);
+      log('Script tag inserted. Signature scanner should catch this.', 'success');
+    }
+
+    // 2. Inline scanner test
+    function triggerInlineSignatureTest() {
+      log('Creating inline script tag containing mining keywords...', 'info');
+
+      const oldScript = document.getElementById('test-inline-script');
+      if (oldScript) oldScript.remove();
+
+      const script = document.createElement('script');
+      script.id = 'test-inline-script';
+      script.textContent = `
+        /* Cryptomining Mock Config */
+        const minerConfig = {
+          algorithm: 'cryptonight',
+          poolHost: 'stratum+tcp://xmr.pool.net',
+          userWallet: '44AFF...B492',
+          threadCount: 4
+        };
+        console.log('[Mock Miner] Initializing mining loops using stratum connection.');
+      `;
+
+      document.body.appendChild(script);
+      log('Inline script tag inserted. MutationObserver should capture textContent.', 'success');
+    }
+
+    // 3. CPU spike test
+    function triggerCpuTest() {
+      log('Pegging main thread (1.2 seconds busy loops)...', 'warn');
+      
+      let count = 0;
+      const duration = 1200; // ms
+      
+      const blockThread = () => {
+        count++;
+        log(`CPU Cycle ${count}/3: blocking event loop...`, 'warn');
+        
+        const start = performance.now();
+        // Busy wait loop
+        while (performance.now() - start < duration) {
+          // Perform throwaway math
+          Math.sin(Math.random()) * Math.cos(Math.random());
+        }
+        
+        log(`CPU Cycle ${count}/3 completed. Thread was locked for ${Math.round(performance.now() - start)}ms.`, 'info');
+        
+        if (count < 3) {
+          log('Waiting 1.5 seconds before next spike to let browser breathe...', 'info');
+          setTimeout(blockThread, 1500);
+        } else {
+          log('CPU test complete. 3 consecutive spikes should trigger CPU warning score (+30).', 'success');
+        }
+      };
+
+      blockThread();
+    }
+
+    // 4. WASM test
+    async function triggerWasmTest() {
+      log('Attempting WebAssembly compile & instantiation...', 'info');
+      
+      // Minimal valid WebAssembly binary header (8 bytes)
+      // \0asm\1\0\0\0
+      const wasmBytes = new Uint8Array([0, 97, 115, 109, 1, 0, 0, 0]);
+      
+      log('Invoking WebAssembly.instantiate(bytes, imports)...', 'info');
+
+      try {
+        // Setup typical miner import shape without shared:true to avoid security isolation errors on file:/// URLs
+        const memory = new WebAssembly.Memory({ initial: 256 });
+        const table = new WebAssembly.Table({ initial: 2, element: 'anyfunc' });
+        
+        const importObject = {
+          env: {
+            memory: memory,
+            table: table
+          }
+        };
+
+        // This will likely throw a compile/validation error due to lack of functions
+        // but the WASM interceptor runs synchronously beforehand, capturing the bytes and imports.
+        await WebAssembly.instantiate(wasmBytes, importObject);
+        log('WASM instantiated successfully (unexpected!)', 'success');
+      } catch (e) {
+        log(`WebAssembly execution caught by browser engine: ${e.message}`, 'warn');
+        log('Check the CryptoJack Guard popup to see if WASM threat was logged!', 'success');
+      }
+    }
+  </script>
+</body>
+</html>
